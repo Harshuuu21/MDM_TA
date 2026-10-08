@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InventoryPro - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                <span>InventoryPro</span>
+            </div>
+            <button class="close-sidebar-btn" id="closeSidebarBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <ul class="nav-links">
+            <li class="active" data-view="dashboard">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Dashboard
+            </li>
+            <li data-view="products">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                Products
+            </li>
+            <li id="navAddProductBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Product
+            </li>
+            <li data-view="low-stock">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                Low Stock
+                <span class="badge" id="lowStockBadge" style="display: none;">0</span>
+            </li>
+            <li data-view="analytics">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                Analytics
+            </li>
+        </ul>
+        <div class="sidebar-bottom">
+            <ul class="nav-links">
+                <li>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Settings
+                </li>
+            </ul>
+            <div class="user-profile">
+                <div class="avatar">JS</div>
+                <div class="user-info">
+                    <div class="user-name">John Smith</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Navigation -->
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="hamburger-btn" id="openSidebarBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div class="page-titles">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <div class="breadcrumb">Inventory / <span id="breadcrumbPath">Dashboard</span></div>
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <div class="search-bar top-search">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="globalSearchInput" placeholder="Search...">
+                </div>
+                <button class="icon-btn notification-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span class="notification-dot" id="navNotificationDot" style="display: none;"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- View Container -->
+        <div class="view-container">
+            
+            <!-- Dashboard View -->
+            <div id="dashboardView" class="view active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon bg-blue">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                            </div>
+                            <span class="trend positive">↑ 12%</span>
+                        </div>
+                        <h3 class="stat-value" id="statTotalProducts">0</h3>
+                        <p class="stat-label">Total Products</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon bg-green">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                            </div>
+                            <span class="trend positive">↑ 5%</span>
+                        </div>
+                        <h3 class="stat-value" id="statTotalStock">0</h3>
+                        <p class="stat-label">Total Units in Stock</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon bg-orange">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                            </div>
+                        </div>
+                        <h3 class="stat-value" id="statLowStock">0</h3>
+                        <p class="stat-label">Low Stock Items</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon bg-purple">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            </div>
+                        </div>
+                        <h3 class="stat-value" id="statInventoryValue">₹0</h3>
+                        <p class="stat-label">Total Inventory Value</p>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section mt-4">
+                    <div class="section-header">
+                        <h2>Recent Products</h2>
+                        <button class="btn btn-outline btn-sm" id="viewAllBtn">View All</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="recentProductsTable">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Product ID</th>
+                                    <th>Category</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentProductsBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products View -->
+            <div id="productsView" class="view" style="display: none;">
+                <div class="page-header">
+                    <div>
+                        <h2>Products</h2>
+                        <p class="text-muted">Manage and monitor your inventory.</p>
+                    </div>
+                    <button class="btn btn-primary" id="openAddProductModalBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Product
+                    </button>
+                </div>
+
+                <div class="toolbar">
+                    <div class="search-bar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="productSearchInput" placeholder="Search products...">
+                    </div>
+                    <div class="filters">
+                        <select id="categoryFilter" class="form-select">
+                            <option value="All">All Categories</option>
+                            <!-- Dynamically populated -->
+                        </select>
+                        <select id="stockFilter" class="form-select">
+                            <option value="All">All Stock</option>
+                            <option value="In Stock">In Stock</option>
+                            <option value="Low Stock">Low Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container card">
+                    <table class="data-table" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Product ID</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Price</th>
+                                <th>Inventory Value</th>
+                                <th>Status</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="empty-state" id="emptyStateContainer" style="display: none;">
+                        <div class="empty-icon">📦</div>
+                        <h3>Your inventory is empty</h3>
+                        <p>Add your first product to start managing your inventory.</p>
+                        <button class="btn btn-primary mt-3" onclick="document.getElementById('openAddProductModalBtn').click()">+ Add Product</button>
+                    </div>
+                    
+                    <div class="empty-state" id="noResultsContainer" style="display: none;">
+                        <div class="empty-icon">🔍</div>
+                        <h3>No products found</h3>
+                        <p>Try searching with a different product name, ID, or category.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Low Stock View -->
+            <div id="lowStockView" class="view" style="display: none;">
+                <div class="page-header">
+                    <div>
+                        <h2>Low Stock Alerts</h2>
+                        <p class="text-muted">Products that require restocking.</p>
+                    </div>
+                </div>
+
+                <div class="alert-card warning-card mb-4" id="lowStockBanner">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    <div>
+                        <h4 id="lowStockCountText">0 products are running low on stock</h4>
+                        <p>Restock these items to avoid running out of inventory.</p>
+                    </div>
+                </div>
+
+                <div class="table-container card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Current Stock</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lowStockTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="empty-state" id="lowStockEmptyState" style="display: none;">
+                        <div class="empty-icon">✅</div>
+                        <h3>All caught up</h3>
+                        <p>No products are currently low on stock.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics View -->
+            <div id="analyticsView" class="view" style="display: none;">
+                <div class="page-header">
+                    <div>
+                        <h2>Analytics Overview</h2>
+                        <p class="text-muted">Insights and reporting for your inventory.</p>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="card chart-card">
+                        <h3>Category Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card chart-card">
+                        <h3>Stock Status Overview</h3>
+                        <div class="chart-container">
+                            <canvas id="stockChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Product Modal (Add/Edit) -->
+    <div class="modal" id="productModal">
+        <div class="modal-header">
+            <h3 id="productModalTitle">Add New Product</h3>
+            <button class="close-btn" id="closeProductModalBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="productForm">
+                <input type="hidden" id="formProductId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productId">Product ID <span class="required">*</span></label>
+                        <input type="text" id="productId" class="form-control" placeholder="e.g. PRD001" required>
+                        <div class="error-msg" id="productIdError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productName">Product Name <span class="required">*</span></label>
+                        <input type="text" id="productName" class="form-control" placeholder="Product Name" required minlength="2">
+                        <div class="error-msg" id="productNameError"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="productCategory">Category <span class="required">*</span></label>
+                    <select id="productCategory" class="form-control" required>
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Stationery">Stationery</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Food">Food</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="error-msg" id="productCategoryError"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productQuantity">Quantity <span class="required">*</span></label>
+                        <input type="number" id="productQuantity" class="form-control" min="0" placeholder="0" required>
+                        <div class="error-msg" id="productQuantityError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productPrice">Price (₹) <span class="required">*</span></label>
+                        <input type="number" id="productPrice" class="form-control" min="0" step="0.01" placeholder="0.00" required>
+                        <div class="error-msg" id="productPriceError"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancelProductBtn">Cancel</button>
+            <button class="btn btn-primary" id="saveProductBtn">Add Product</button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal delete-modal" id="deleteModal">
+        <div class="modal-body text-center">
+            <div class="warning-icon-large">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            </div>
+            <h3>Delete Product?</h3>
+            <p>Are you sure you want to permanently delete <strong id="deleteProductName"></strong>? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer justify-center">
+            <button class="btn btn-outline" id="cancelDeleteBtn">Cancel</button>
+            <button class="btn btn-danger" id="confirmDeleteBtn">Delete Product</button>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-header">
+            <h3>Product Details</h3>
+            <button class="close-btn" id="closeDetailsModalBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="details-card">
+                <div class="details-header">
+                    <div class="details-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    </div>
+                    <div>
+                        <h2 id="detailName">Product Name</h2>
+                        <span class="badge" id="detailStatus">Status</span>
+                    </div>
+                </div>
+                
+                <div class="details-grid mt-4">
+                    <div class="detail-item">
+                        <span class="detail-label">Product ID</span>
+                        <span class="detail-value" id="detailId">--</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Category</span>
+                        <span class="detail-value" id="detailCategory">--</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Quantity</span>
+                        <span class="detail-value" id="detailQuantity">--</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Price per unit</span>
+                        <span class="detail-value" id="detailPrice">--</span>
+                    </div>
+                    <div class="detail-item highlight">
+                        <span class="detail-label">Total Inventory Value</span>
+                        <span class="detail-value" id="detailTotalValue">--</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Date Added</span>
+                        <span class="detail-value" id="detailDate">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="closeDetailsBtn">Close</button>
+            <button class="btn btn-primary" id="editFromDetailsBtn">Edit Product</button>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
